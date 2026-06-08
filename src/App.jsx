@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 
 import NavigationBar from './components/NavigationBar';
 import Section from './components/Section';
 import ProjectCard from './components/ProjectCard';
 import ComingSoonPage from './components/ComingSoonPage';
+import DoctorOfficePage from './components/doctorOffice/DoctorOfficePage';
 
 import storeImage from './assets/store.png'
 import gameImage from './assets/game.jpg'
@@ -15,20 +16,22 @@ import './App.css';
 
 
 function App() {
-    const dummyImage = 'https://placehold.co/300x200?text=Coming+Soon';
-
     const [darkMode, setDarkMode] = useState(true);
+    const location = useLocation();
+    const isServicePage = location.pathname.startsWith('/service');
 
     function toggleDarkMode() {
         setDarkMode(!darkMode);
     }
 
     return (
-        <div className={darkMode ? 'app dark-mode' : 'app'}>
-            <NavigationBar
-                darkMode={darkMode}
-                toggleDarkMode={toggleDarkMode}
-            />
+        <div className={`${darkMode ? 'app dark-mode' : 'app'}${isServicePage ? ' service-app' : ''}`}>
+            {!isServicePage && (
+                <NavigationBar
+                    darkMode={darkMode}
+                    toggleDarkMode={toggleDarkMode}
+                />
+            )}
 
             <Routes>
                 <Route
@@ -39,10 +42,10 @@ function App() {
                                 <div className="container">
                                     <p className="eyebrow">SEG 3125 Portfolio</p>
 
-                                    <h1>Hi, I'm Kevin.</h1>
+                                    <h1>Hi, I am Kevin.</h1>
 
                                     <p className="hero-text">
-                                        I'm a computer science and math student at the University of Ottawa
+                                        I am a computer science and math student at the University of Ottawa
                                         with an interest in software development, DevOps, and applied AI.
                                         I enjoy building practical projects, learning new technologies,
                                         and solving problems through clean, efficient code.
@@ -105,13 +108,8 @@ function App() {
                 />
 
                 <Route
-                    path="/service"
-                    element={
-                        <ComingSoonPage
-                            title="Service Website"
-                            description="This page will contain my future service website design project."
-                        />
-                    }
+                    path="/service/*"
+                    element={<DoctorOfficePage />}
                 />
 
                 <Route
